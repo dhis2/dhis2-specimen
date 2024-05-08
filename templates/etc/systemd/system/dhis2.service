@@ -9,8 +9,7 @@ UMask=0027
 Environment=JAVA_OPTS="-Xms4g -Xmx4g"
 Environment=CATALINA_BASE=$DHIS2_TOMCAT
 Environment=CATALINA_HOME=/usr/share/tomcat9
-# Environment=CATALINA_OPTS="-Djava.awt.headless=true -Dorg.apache.catalina.security.SecurityListener.UMASK=0027 -Dlog4j2.configurationFile=${CATALINA_BASE}/conf/log4j2.xml"
-Environment=CATALINA_OPTS="-Djava.awt.headless=true -Dorg.apache.catalina.security.SecurityListener.UMASK=0027"
+Environment=CATALINA_OPTS="-Djava.awt.headless=true -Dorg.apache.catalina.security.SecurityListener.UMASK=0027 -Dlog4j2.configurationFile=${CATALINA_BASE}/conf/log4j2.xml"
 ExecStart=java $JAVA_OPTS $CATALINA_OPTS -classpath ${CATALINA_HOME}/bin/bootstrap.jar:${CATALINA_HOME}/bin/tomcat-juli.jar -Dcatalina.base=${CATALINA_BASE} -Dcatalina.home=${CATALINA_HOME} org.apache.catalina.startup.Bootstrap start
 ExecStop=java $JAVA_OPTS $CATALINA_OPTS -classpath ${CATALINA_HOME}/bin/bootstrap.jar:${CATALINA_HOME}/bin/tomcat-juli.jar -Dcatalina.base=${CATALINA_BASE} -Dcatalina.home=${CATALINA_HOME} org.apache.catalina.startup.Bootstrap stop
 SuccessExitStatus=143

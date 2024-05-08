@@ -21,7 +21,7 @@ DEBIAN_FRONTEND=noninteractive
 export DEBIAN_FRONTEND
 
 # Install minimally necessary tools
-apt-get install -yqq coreutils curl gettext-base git jq sudo
+apt-get install -yqq coreutils curl gettext-base git jq net-tools sudo
 
 # Set additional variables
 DHIS2_TMP=$(mktemp -d)
@@ -37,7 +37,7 @@ DHIS2_HOST=$(hostname)
 DHIS2_FQDN=$(curl -s --connect-timeout 10 http://169.254.169.254/openstack/latest/meta_data.json | jq -j .name)
 
 # Export variables for templating
-export DHIS2_HOME DHIS2_USER DHIS2_GROUP DHIS2_HOST DHIS2_FQDN DHIS2_PORT DHIS2_DB DHIS2_DBUSER DHIS2_DBPASS DHIS2_TOMCAT
+export DHIS2_HOME DHIS2_USER DHIS2_GROUP DHIS2_HOST DHIS2_FQDN DHIS2_PORT DHIS2_DB DHIS2_DBUSER DHIS2_DBPASS DHIS2_TOMCAT DHIS2_CATALINA_NAME DHIS2_CATALINA_HOST
 
 # Set the FQDN
 # TODO: handle missing FQDN after "if"
@@ -106,7 +106,7 @@ cat "$DHIS2_SRC"/templates/etc/systemd/system/dhis2.service | envsubst "$(printf
 cat "$DHIS2_SRC"/templates/opt/dhis2/tomcat/conf/server.xml | envsubst "$(printf '${%s} ' ${!DHIS2_*})" > "$DHIS2_TOMCAT"/conf/server.xml
 cp "$DHIS2_SRC"/templates/opt/dhis2/tomcat/conf/Catalina/localhost/rewrite.config  "$DHIS2_TOMCAT"/conf/"$DHIS2_CATALINA_NAME"/"$DHIS2_CATALINA_HOST"/rewrite.config
 cp "$DHIS2_SRC"/templates/opt/dhis2/tomcat/conf/context.xml "$DHIS2_TOMCAT"/conf/context.xml
-#cp "$DHIS2_SRC"/templates/opt/dhis2/tomcat/conf/log4j.xml "$DHIS2_TOMCAT"/conf/log4j.xml
+cp "$DHIS2_SRC"/templates/opt/dhis2/tomcat/conf/log4j2.xml "$DHIS2_TOMCAT"/conf/log4j2.xml
 cp /usr/share/tomcat9/etc/web.xml "$DHIS2_TOMCAT"/conf/web.xml
 
 # Apply systemd configuration

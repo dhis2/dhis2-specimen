@@ -6,7 +6,7 @@
   <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
   <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
 
-  <Service name="Catalina">
+  <Service name="DHIS2_CATALINA_NAME">
     <Connector port="$DHIS2_PORT" protocol="HTTP/1.1" address="127.0.0.1" connectionTimeout="20000" redirectPort="8443" />
     <Engine name="$DHIS2_CATALINA_NAME" defaultHost="$DHIS2_CATALINA_HOST">
       <Host name="$DHIS2_CATALINA_HOST" appBase="webapps" unpackWARs="true" autoDeploy="true">
