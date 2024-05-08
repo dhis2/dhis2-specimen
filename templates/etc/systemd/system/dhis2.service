@@ -11,9 +11,8 @@ Environment=CATALINA_BASE=$DHIS2_TOMCAT
 Environment=CATALINA_HOME=/usr/share/tomcat9
 # Environment=CATALINA_OPTS="-Djava.awt.headless=true -Dorg.apache.catalina.security.SecurityListener.UMASK=0027 -Dlog4j2.configurationFile=${CATALINA_BASE}/conf/log4j2.xml"
 Environment=CATALINA_OPTS="-Djava.awt.headless=true -Dorg.apache.catalina.security.SecurityListener.UMASK=0027"
-#Environment=CATALINA_ELASTIC_OPTS="-javaagent:/opt/dhis2/extra/elastic-apm-agent.jar -Delastic.apm.service_name=dhis2 -Delastic.apm.application_packages=org.hisp.dhis -Delastic.apm.server_url=http://127.0.0.1:8200"
-ExecStart=java $JAVA_OPTS $CATALINA_ELASTIC_OPTS $CATALINA_OPTS -classpath ${CATALINA_HOME}/bin/bootstrap.jar:${CATALINA_HOME}/bin/tomcat-juli.jar -Dcatalina.base=${CATALINA_BASE} -Dcatalina.home=${CATALINA_HOME} org.apache.catalina.startup.Bootstrap start
-ExecStop=java $JAVA_OPTS $CATALINA_ELASTIC_OPTS $CATALINA_OPTS -classpath ${CATALINA_HOME}/bin/bootstrap.jar:${CATALINA_HOME}/bin/tomcat-juli.jar -Dcatalina.base=${CATALINA_BASE} -Dcatalina.home=${CATALINA_HOME} org.apache.catalina.startup.Bootstrap stop
+ExecStart=java $JAVA_OPTS $CATALINA_OPTS -classpath ${CATALINA_HOME}/bin/bootstrap.jar:${CATALINA_HOME}/bin/tomcat-juli.jar -Dcatalina.base=${CATALINA_BASE} -Dcatalina.home=${CATALINA_HOME} org.apache.catalina.startup.Bootstrap start
+ExecStop=java $JAVA_OPTS $CATALINA_OPTS -classpath ${CATALINA_HOME}/bin/bootstrap.jar:${CATALINA_HOME}/bin/tomcat-juli.jar -Dcatalina.base=${CATALINA_BASE} -Dcatalina.home=${CATALINA_HOME} org.apache.catalina.startup.Bootstrap stop
 SuccessExitStatus=143
 
 [Install]
