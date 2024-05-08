@@ -13,6 +13,8 @@ DHIS2_DBUSER=$DHIS2_USER
 DHIS2_DBPASS=$(< /dev/urandom tr -cd "[:alnum:]" | head -c 32; echo)
 DHIS2_TOMCAT="$DHIS2_HOME/tomcat"
 DHIS2_PORT=18080
+DHIS2_CATALINA_NAME="Catalina"
+DHIS2_CATALINA_HOST="localhost"
 
 # The script runs in the non-interactive mode
 DEBIAN_FRONTEND=noninteractive
@@ -87,7 +89,7 @@ sudo -u postgres -i psql -c "create extension pg_stat_statements;" $DHIS2_DB
 useradd -d $DHIS2_HOME -k /dev/null -m -r -s /usr/sbin/nologin $DHIS2_USER
 
 # Configure DHIS2 directories
-mkdir -p "$DHIS2_TOMCAT"/conf/Catalina/localhost "$DHIS2_TOMCAT"/webapps
+mkdir -p "$DHIS2_TOMCAT"/conf/"$DHIS2_CATALINA_NAME"/"$DHIS2_CATALINA_HOST" "$DHIS2_TOMCAT"/webapps
 chown -R $DHIS2_USER:$DHIS2_GROUP $DHIS2_TOMCAT
 wget -O "$DHIS2_TOMCAT"/webapps/ROOT.war $DHIS2_WARFILE
 
@@ -101,13 +103,14 @@ systemctl disable tomcat9
 # Create DHIS2 configuration
 cat "$DHIS2_SRC"/templates/opt/dhis2/dhis.conf | envsubst "$(printf '${%s} ' ${!DHIS2_*})" > "$DHIS2_HOME"/dhis.conf
 cat "$DHIS2_SRC"/templates/etc/systemd/system/dhis2.service | envsubst "$(printf '${%s} ' ${!DHIS2_*})" > /etc/systemd/system/dhis2.service
-systemctl daemon-reload
 cat "$DHIS2_SRC"/templates/opt/dhis2/tomcat/conf/server.xml | envsubst "$(printf '${%s} ' ${!DHIS2_*})" > "$DHIS2_TOMCAT"/conf/server.xml
-# TODO: Change localhost to a variable here and above in server.xml
-cp "$DHIS2_SRC"/templates/opt/dhis2/tomcat/conf/Catalina/localhost/rewrite.config  "$DHIS2_TOMCAT"/conf/Catalina/localhost/rewrite.config
-#cp "$DHIS2_SRC"/templates/opt/dhis2/tomcat/conf/context.xml "$DHIS2_TOMCAT"/conf/context.xml
+cp "$DHIS2_SRC"/templates/opt/dhis2/tomcat/conf/Catalina/localhost/rewrite.config  "$DHIS2_TOMCAT"/conf/"$DHIS2_CATALINA_NAME"/"$DHIS2_CATALINA_HOST"/rewrite.config
+cp "$DHIS2_SRC"/templates/opt/dhis2/tomcat/conf/context.xml "$DHIS2_TOMCAT"/conf/context.xml
 #cp "$DHIS2_SRC"/templates/opt/dhis2/tomcat/conf/log4j.xml "$DHIS2_TOMCAT"/conf/log4j.xml
 cp /usr/share/tomcat9/etc/web.xml "$DHIS2_TOMCAT"/conf/web.xml
+
+# Apply systemd configuration
+systemctl daemon-reload
 
 # Perform a final upgrade
 apt-get install -yqq unattended-upgrades
