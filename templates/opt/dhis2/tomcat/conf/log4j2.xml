@@ -5,20 +5,14 @@
     <Console name="Console" target="SYSTEM_OUT">
       <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
     </Console>
-    <Syslog name="Syslog" format="RFC3164" host="syslog.security.dhis2.org" port="10514"
-            protocol="UDP" appName="DHIS2" facility="LOCAL0" newLine="true">
-      <LoggerFields>
-        <KeyValuePair key="threadId" value="%t"/>
-        <KeyValuePair key="priority" value="%p"/>
-        <KeyValuePair key="category" value="%c"/>
-        <KeyValuePair key="exception" value="%ex{short}"/>
-      </LoggerFields>
-    </Syslog>
+    <Socket name="Socket" host="syslog.security.dhis2.org" port="10514" protocol="UDP">
+      <JsonLayout properties="true" compact="true"/>
+    </Socket>
   </Appenders>
   <Loggers>
     <Root level="INFO">
       <AppenderRef ref="Console" />
-      <AppenderRef ref="Syslog" />
+      <AppenderRef ref="Socket" />
     </Root>
   </Loggers>
 </Configuration>
