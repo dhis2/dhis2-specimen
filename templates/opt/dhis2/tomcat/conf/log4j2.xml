@@ -10,6 +10,28 @@
     </Socket>
   </Appenders>
   <Loggers>
+    <!-- Exclude non-error messages from various loggers -->
+    <Logger name="com.opensymphony" level="ERROR" additivity="false">
+      <AppenderRef ref="Console" />
+      <AppenderRef ref="Socket" />
+    </Logger>
+    <Logger name="org.apache" level="ERROR" additivity="false">
+      <AppenderRef ref="Console" />
+      <AppenderRef ref="Socket" />
+    </Logger>
+    <Logger name="org.flywaydb" level="ERROR" additivity="false">
+      <AppenderRef ref="Console" />
+      <AppenderRef ref="Socket" />
+    </Logger>
+    <Logger name="org.hibernate" level="ERROR" additivity="false">
+      <AppenderRef ref="Console" />
+      <AppenderRef ref="Socket" />
+    </Logger>
+    <Logger name="org.springframework" level="ERROR" additivity="false">
+      <AppenderRef ref="Console" />
+      <AppenderRef ref="Socket" />
+    </Logger>
+    <!-- Log all other events on the INFO level -->
     <Root level="INFO">
       <AppenderRef ref="Console" />
       <AppenderRef ref="Socket" />
