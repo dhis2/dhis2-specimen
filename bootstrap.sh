@@ -15,6 +15,7 @@ DHIS2_TOMCAT="$DHIS2_HOME/tomcat"
 DHIS2_PORT=18080
 DHIS2_CATALINA_NAME="Catalina"
 DHIS2_CATALINA_HOST="localhost"
+DHIS2_SYSLOG_HOST="syslog.security.dhis2.org"
 
 # The script runs in the non-interactive mode
 DEBIAN_FRONTEND=noninteractive
@@ -104,9 +105,9 @@ systemctl disable tomcat9
 cat "$DHIS2_SRC"/templates/opt/dhis2/dhis.conf | envsubst "$(printf '${%s} ' ${!DHIS2_*})" > "$DHIS2_HOME"/dhis.conf
 cat "$DHIS2_SRC"/templates/etc/systemd/system/dhis2.service | envsubst "$(printf '${%s} ' ${!DHIS2_*})" > /etc/systemd/system/dhis2.service
 cat "$DHIS2_SRC"/templates/opt/dhis2/tomcat/conf/server.xml | envsubst "$(printf '${%s} ' ${!DHIS2_*})" > "$DHIS2_TOMCAT"/conf/server.xml
+cat "$DHIS2_SRC"/templates/opt/dhis2/tomcat/conf/log4j2.xml | envsubst "$(printf '${%s} ' ${!DHIS2_*})" > "$DHIS2_TOMCAT"/conf/log4j2.xml
 cp "$DHIS2_SRC"/templates/opt/dhis2/tomcat/conf/Catalina/localhost/rewrite.config  "$DHIS2_TOMCAT"/conf/"$DHIS2_CATALINA_NAME"/"$DHIS2_CATALINA_HOST"/rewrite.config
 cp "$DHIS2_SRC"/templates/opt/dhis2/tomcat/conf/context.xml "$DHIS2_TOMCAT"/conf/context.xml
-cp "$DHIS2_SRC"/templates/opt/dhis2/tomcat/conf/log4j2.xml "$DHIS2_TOMCAT"/conf/log4j2.xml
 cp /usr/share/tomcat9/etc/web.xml "$DHIS2_TOMCAT"/conf/web.xml
 
 # Apply systemd configuration

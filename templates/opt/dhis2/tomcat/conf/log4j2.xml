@@ -5,12 +5,12 @@
     <Console name="Console" target="SYSTEM_OUT">
       <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
     </Console>
-    <Socket name="Socket" host="syslog.security.dhis2.org" port="10514" protocol="UDP">
-      <JsonLayout properties="true" compact="true"/>
+    <Socket name="Socket" host="$DHIS2_SYSLOG_HOST" port="10515" protocol="UDP">
+      <JsonLayout properties="true" compact="true" includeStacktrace="false"/>
     </Socket>
   </Appenders>
   <Loggers>
-    <!-- Exclude non-error messages from various loggers -->
+    <!-- Exclude selected non-error messages to reduce logging noise -->
     <Logger name="com.opensymphony" level="ERROR" additivity="false">
       <AppenderRef ref="Console" />
       <AppenderRef ref="Socket" />
