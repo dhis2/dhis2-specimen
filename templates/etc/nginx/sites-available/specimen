@@ -21,8 +21,8 @@ server {
     server_name $DHIS2_FQDN;
     root /var/www/$DHIS2_FQDN;
 
-    access_log /var/log/nginx/access.log;
-    error_log /var/log/nginx/error.log;
+    access_log syslog:server=$DHIS2_SYSLOG_HOST:10514,tag=nginx,severity=info;
+    error_log syslog:server=$DHIS2_SYSLOG_HOST:10514,tag=nginx;
 
     location /.well-known/ {
         alias /var/www/html/.well-known/;
