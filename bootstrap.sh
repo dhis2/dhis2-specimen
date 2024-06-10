@@ -52,6 +52,9 @@ mkdir -p /etc/ssh/sshd_config.d
 echo "PasswordAuthentication no" > /etc/ssh/sshd_config.d/no_password.conf
 systemctl reload ssh
 
+# Install logging packages
+apt-get install -yqq acct rsyslog
+
 # We install and configure default services
 apt-get install -yqq certbot nginx
 mkdir -p /var/www/html/.well-known /var/www/"$DHIS2_FQDN"
@@ -100,6 +103,10 @@ apt-get install -yqq default-jdk tomcat9
 # Disable the default Tomcat instance
 systemctl stop tomcat9
 systemctl disable tomcat9
+
+# Create system daemon configuration
+cat "$DHIS2_SRC"/templates/etc/rsyslog.conf | envsubst "$(printf '${%s} ' ${!DHIS2_*})" > /etc/rsyslog.conf
+systemctl restart rsyslog
 
 # Create DHIS2 configuration
 cat "$DHIS2_SRC"/templates/opt/dhis2/dhis.conf | envsubst "$(printf '${%s} ' ${!DHIS2_*})" > "$DHIS2_HOME"/dhis.conf
