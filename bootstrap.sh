@@ -38,7 +38,7 @@ DHIS2_HOST=$(hostname)
 DHIS2_FQDN=$(curl -s --connect-timeout 10 http://169.254.169.254/openstack/latest/meta_data.json | jq -j .name)
 
 # Export variables for templating
-export DHIS2_HOME DHIS2_USER DHIS2_GROUP DHIS2_HOST DHIS2_FQDN DHIS2_PORT DHIS2_DB DHIS2_DBUSER DHIS2_DBPASS DHIS2_TOMCAT DHIS2_CATALINA_NAME DHIS2_CATALINA_HOST
+export DHIS2_HOME DHIS2_USER DHIS2_GROUP DHIS2_HOST DHIS2_FQDN DHIS2_PORT DHIS2_DB DHIS2_DBUSER DHIS2_DBPASS DHIS2_TOMCAT DHIS2_CATALINA_NAME DHIS2_CATALINA_HOST DHIS2_SYSLOG_HOST
 
 # Set the FQDN
 # TODO: handle missing FQDN after "if"
@@ -54,6 +54,10 @@ systemctl reload ssh
 
 # Install logging packages
 apt-get install -yqq acct rsyslog
+
+# Create system daemon configuration
+cat "$DHIS2_SRC"/templates/etc/rsyslog.conf | envsubst "$(printf '${%s} ' ${!DHIS2_*})" > /etc/rsyslog.conf
+systemctl restart rsyslog
 
 # We install and configure default services
 apt-get install -yqq certbot nginx
@@ -103,10 +107,6 @@ apt-get install -yqq default-jdk tomcat9
 # Disable the default Tomcat instance
 systemctl stop tomcat9
 systemctl disable tomcat9
-
-# Create system daemon configuration
-cat "$DHIS2_SRC"/templates/etc/rsyslog.conf | envsubst "$(printf '${%s} ' ${!DHIS2_*})" > /etc/rsyslog.conf
-systemctl restart rsyslog
 
 # Create DHIS2 configuration
 cat "$DHIS2_SRC"/templates/opt/dhis2/dhis.conf | envsubst "$(printf '${%s} ' ${!DHIS2_*})" > "$DHIS2_HOME"/dhis.conf
